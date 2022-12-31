@@ -3,10 +3,173 @@
     <head>
         <meta charset="UTF-8">
         <title>Documention</title>
+        <style type="text/css">
+            td, th {
+                border-style: dotted;
+                text-align: center;
+            }
+            #json-ex{text-align: left;}
+        </style>
     </head>
     
     <body>
         <h1>Documentation</h1>
-        <p>Hi</p>
+        <p>Table showing URL Requests</p>
+
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Returns</th>
+                        <th>URL</th>
+                        <th>HTTP Method</th>
+                        <th>Query Parameters</th>
+                        <th>Requests</th>
+                        <th>Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>List of Books</td>
+                        <td>/books</td>
+                        <td>GET</td>
+                        <td>-</td>
+                        <td>None</td>
+                        <td>JSON containing data of all the books</td>
+                    </tr>
+                    <tr>
+                        <td>Book Information</td>
+                        <td>/books/:Title</td>
+                        <td>GET</td>
+                        <td>:title</td>
+                        <td>None</td>
+                        <td>JSON object containing data as displayed:
+                            <pre id="json-ex">
+                                <code>
+{
+    title: '...',
+    synopsis: '...',
+    genre: {
+        name: '...',
+        description: '...'
+    },
+    author: {
+        name: '...',
+        bio: '...',
+        birth: '...',
+        death: '...'
+    },
+    imageURL: '...'
+}
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Genre</td>
+                        <td>/genre/:name</td>
+                        <td>GET</td>
+                        <td>:name</td>
+                        <td>None</td>
+                        <td>JSON object containing data as displayed:
+                            <pre id="json-ex">
+                                <code>
+{
+    genre: {
+        name: '...',
+        description: '...'
+    }
+}
+                                </code>
+                            </pre>
+                    </tr>
+                    <tr>
+                        <td>Author</td>
+                        <td>/author/:name</td>
+                        <td>GET</td>
+                        <td>:name</td>
+                        <td>None</td>
+                        <td>JSON object containing data as displayed:
+                            <pre id="json-ex">
+                                <code>
+{
+    author: {
+        name: '...',
+        bio: '...',
+        birth: '...',
+        death: '...'
+    }
+}
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Adding a new user</td>
+						<td>/users</td>
+						<td>POST</td>
+						<td>-</td>
+						<td>None</td>
+						<td>JSON object containing data of the new user. Example:
+							<pre id="json-ex">
+								<code>
+{
+	Username: '...',
+  Password: '...',
+  Email: '...',
+  Birthday: MMDDYYYY,
+  FavoriteBooks: [...]
+}
+								</code>
+							</pre>
+						</td>
+                    </tr>
+                    <tr>
+                        <td>Adding a new user</td>
+						<td>/users/:username</td>
+						<td>POST</td>
+						<td>:username</td>
+						<td>None</td>
+						<td>JSON object containing the updated info of the current user. Example:
+							<pre id="json-ex">
+								<code>
+{
+	Username: '...',
+  Password: '...',
+  Email: '...',
+  Birthday: MMDDYYYY,
+  FavoriteBooks: [...]
+}
+								</code>
+							</pre>
+						</td>
+                    </tr>
+                    <tr>
+                        <td>Adding a book to a user's favorite list</td>
+                        <td>/users/:username/books/:bookID</td>
+                        <td>POST</td>
+                        <td>:bookID</td>
+                        <td>None</td>
+                        <td>Favorite Books: ['...', '...']</td>
+                    </tr>
+                    <tr>
+                        <td>Removing a book to a current user's list</td>
+                        <td>/users/:username/books/:bookID</td>
+                        <td>DELETE</td>
+                        <td>:bookID</td>
+                        <td>None</td>
+                        <td>Favorite Books: ['...']</td>
+                    </tr>
+                    <tr>
+                        <td>Removing a current user</td>
+						<td>/users/:Username</td>
+						<td>DELETE</td>
+						<td>:Username</td>
+						<td>None</td>
+						<td>Username was deleted.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
