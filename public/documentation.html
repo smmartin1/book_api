@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <td>Book Information</td>
-                        <td>/books/:Title</td>
+                        <td>/books/:title</td>
                         <td>GET</td>
                         <td>:title</td>
                         <td>None</td>
@@ -125,7 +125,7 @@
 						</td>
                     </tr>
                     <tr>
-                        <td>Adding a new user</td>
+                        <td>Updating a current user</td>
 						<td>/users/:username</td>
 						<td>POST</td>
 						<td>:username</td>
@@ -146,17 +146,17 @@
                     </tr>
                     <tr>
                         <td>Adding a book to a user's favorite list</td>
-                        <td>/users/:username/books/:bookID</td>
+                        <td>/users/:username/books/:bookTitle</td>
                         <td>POST</td>
-                        <td>:bookID</td>
+                        <td>:bookTitle</td>
                         <td>None</td>
                         <td>Favorite Books: ['...', '...']</td>
                     </tr>
                     <tr>
                         <td>Removing a book to a current user's list</td>
-                        <td>/users/:username/books/:bookID</td>
+                        <td>/users/:username/books/:bookTitle</td>
                         <td>DELETE</td>
-                        <td>:bookID</td>
+                        <td>:bookTitle</td>
                         <td>None</td>
                         <td>Favorite Books: ['...']</td>
                     </tr>
