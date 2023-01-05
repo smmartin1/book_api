@@ -276,18 +276,6 @@ app.get('/books/:title', (req, res) => {
     }
 });
 
-//Get Genre
-app.get('/books/genre/:name', (req, res) => {
-    const { name } = req.params;
-    const genre = bookList.find(book => book.genre.name === name).genre;
-
-    if (genre) {
-        res.status(200).json(genre);
-    } else {
-        res.status(400).send('No such genre');
-    }
-});
-
 //Get Author
 app.get('/books/author/:name', (req, res) => {
     const { name } = req.params;
