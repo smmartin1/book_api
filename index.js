@@ -1,9 +1,9 @@
 //JavaScript Document
 
 const express = require('express'),
-        bodyParser = require('body-parser'),
-        uuid = require('uuid'),
-        morgan = require('morgan');
+    bodyParser = require('body-parser'),
+    uuid = require('uuid'),
+    morgan = require('morgan');
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');
@@ -16,10 +16,18 @@ const Users = Models.User;
 
 mongoose.connect('mongodb://localhost:27017/myBooksDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+const cors = require('cors');
+app.use(cors());
+
+const { check, validationResult } = require('express-validator');
+
 const app = express();
+
+const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(morgan('common'));
 
 let auth = require('./auth')(app);
@@ -33,27 +41,40 @@ app.get('/documentation', (req, res) => {
 });
 
 //Add New User
-app.post('/users', (req, res) => {
-    Users.findOne({ Username: req.body.Username }).then((users) => {
-        if (users) {
-            return res.status(400).send(req.body.Username + ' already exists');
-        } else {
-            Users.create({
-                Username: req.body.Username,
-                Password: req.body.Password,
-                Email: req.body.Email,
-                Birthday: req.body.Birthday
-            }).then((users) => {
-                res.status(201).json(users)
-            }).catch((error) => {
-                console.error(error);
-                res.status.apply(500).send('Error: ' + error);
-            })
+app.post('/users', 
+    [
+        check('Username', 'Username is required').isLength({min: 5}),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
         }
-    }).catch((err) => {
-        console.error(err);
-        res.status.apply(500).send('Error: ' + err);
-    });
+
+        let hashedPassword = Users.hashedPassword(req.body.Password);
+
+        Users.findOne({ Username: req.body.Username }).then((users) => {
+            if (users) {
+                return res.status(400).send(req.body.Username + ' already exists');
+            } else {
+                Users.create({
+                    Username: req.body.Username,
+                    Password: hashedPassword,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                }).then((users) => {
+                    res.status(201).json(users)
+                }).catch((error) => {
+                    console.error(error);
+                    res.status.apply(500).send('Error: ' + error);
+                })
+            }
+        }).catch((err) => {
+            console.error(err);
+            res.status.apply(500).send('Error: ' + err);
+        });
 });
 
 //Get All Users
@@ -183,6 +204,6 @@ app.use((err, req, res, next) => {
 });
 
 //Port Number
-app.listen(8080, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log('This app is listening on port 8080');
 });
