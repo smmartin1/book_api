@@ -14,9 +14,13 @@ require('./passport');
 const Books = Models.Book;
 const Users = Models.User;
 
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI || 'mongodb://localhost:27017/myBooksDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const cors = require('cors');
+
+const { check, validationResult } = require('express-validator');
+
+const app = express();
 
 let allowedOrigins = [
     'https://mighty-falls-90534.herokuapp.com/',
@@ -34,10 +38,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
-const { check, validationResult } = require('express-validator');
-
-const app = express();
 
 const port = process.env.PORT || 8080;
 
