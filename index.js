@@ -22,6 +22,13 @@ const { check, validationResult } = require('express-validator');
 
 const app = express();
 
+const port = process.env.PORT || 8080;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(morgan('common'));
+
 let allowedOrigins = [
     'https://mighty-falls-90534.herokuapp.com',
     'http://localhost:8080',
@@ -39,13 +46,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
-const port = process.env.PORT || 8080;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(morgan('common'));
 
 let auth = require('./auth')(app);
 
