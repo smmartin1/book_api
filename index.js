@@ -23,7 +23,7 @@ const { check, validationResult } = require('express-validator');
 const app = express();
 
 let allowedOrigins = [
-    'https://mighty-falls-90534.herokuapp.com/',
+    'https://mighty-falls-90534.herokuapp.com',
     'http://localhost:8080',
     'http://localhost:1234'
 ];
