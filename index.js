@@ -24,7 +24,8 @@ const app = express();
 
 let allowedOrigins = [
     'https://mighty-falls-90534.herokuapp.com/',
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'http://localhost:1234'
 ];
 
 app.use(cors({
@@ -181,7 +182,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
 });
 
 //Get List of Books
-app.get('/books', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
     Books.find().then((books) => {
         res.status(201).json(books);
     }).catch((err) => {
@@ -191,7 +192,7 @@ app.get('/books', passport.authenticate('jwt', {session: false}), (req, res) => 
 });
 
 //Get Info on a Book
-app.get('/books/:Title', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/books/:Title', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
     Books.findOne({ Title: req.params.Title }).then((books) => {
         res.json(books);
     }).catch((err) => {
@@ -201,7 +202,7 @@ app.get('/books/:Title', passport.authenticate('jwt', {session: false}), (req, r
 });
 
 //Get Author
-app.get('/author/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/author/:Name', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
     Books.find({ 'Author.Name': req.params.Name }).then((books) => {
         res.json(books);
     }).catch((err) => {
