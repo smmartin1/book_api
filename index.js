@@ -16,8 +16,6 @@ const Users = Models.User;
 
 mongoose.connect(process.env.CONNECTION_URI || 'mongodb://localhost:27017/myBooksDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-console.log(process.env.CONNECTION_URI);
-
 const cors = require('cors');
 
 const { check, validationResult } = require('express-validator');
@@ -97,10 +95,9 @@ app.post('/users',
 });
 
 //Get All Users
-app.get('/users', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
+app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
     Users.find().then((users) => {
         res.status(201).json(users);
-        console.log('Hello');
     }).catch((err) => {
         console.error(err);
         res.status.apply(500).send('Error: ' + err);
@@ -186,8 +183,9 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
 
 //Get List of Books
 app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
-    Books.find().then((books) => {
-        res.status(201).json(books);
+    Books.find().then((book) => {
+        res.status(201).json(book);
+        console.log(book);
     }).catch((err) => {
         console.error(err);
         res.status(500).send('Error: ' + err);
@@ -196,8 +194,8 @@ app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res)
 
 //Get Info on a Book
 app.get('/books/:Title', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
-    Books.findOne({ Title: req.params.Title }).then((books) => {
-        res.json(books);
+    Books.findOne({ Title: req.params.Title }).then((book) => {
+        res.json(book);
     }).catch((err) => {
         console.error(err);
         res.status(500).send('Error: ' + err);
@@ -206,8 +204,8 @@ app.get('/books/:Title', /*passport.authenticate('jwt', {session: false}),*/ (re
 
 //Get Author
 app.get('/author/:Name', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
-    Books.find({ 'Author.Name': req.params.Name }).then((books) => {
-        res.json(books);
+    Books.find({ 'Author.Name': req.params.Name }).then((book) => {
+        res.json(book);
     }).catch((err) => {
         console.error(err);
         res.status(500).send('Error: ' + err);
