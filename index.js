@@ -185,7 +185,6 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
 app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
     Books.find().then((book) => {
         res.status(201).json(book);
-        console.log('book');
     }).catch((err) => {
         console.error(err);
         res.status(500).send('Error: ' + err);
