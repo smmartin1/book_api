@@ -16,6 +16,8 @@ const Users = Models.User;
 
 mongoose.connect(process.env.CONNECTION_URI || 'mongodb://localhost:27017/myBooksDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+console.log(process.env.CONNECTION_URI);
+
 const cors = require('cors');
 
 const { check, validationResult } = require('express-validator');
@@ -95,9 +97,10 @@ app.post('/users',
 });
 
 //Get All Users
-app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/users', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
     Users.find().then((users) => {
         res.status(201).json(users);
+        console.log('Hello');
     }).catch((err) => {
         console.error(err);
         res.status.apply(500).send('Error: ' + err);
