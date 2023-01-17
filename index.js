@@ -70,7 +70,7 @@ app.post('/users',
             return res.status(422).json({ errors: errors.array() });
         }
 
-        let hashedPassword = Users.hashedPassword(req.body.Password);
+        let hashedPassword = Users.hashPassword(req.body.Password);
 
         Users.findOne({ Username: req.body.Username }).then((users) => {
             if (users) {
@@ -167,6 +167,17 @@ app.delete('/users/:Username/books/:bookID', passport.authenticate('jwt', {sessi
     });
 });
 
+//Get User's Favorite Book(s)
+app.get('/users/:Username/books', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Users.findOne({ Username: req.params.Username}).then((user) => {
+        if (user) {
+            req.status(200).json(user.FavoriteBooks);
+        } else {
+            res.status(400).send('Could not find favorite movies or user does not have any');
+        }
+    })
+});
+
 //Delete A User
 app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username }).then((users) => {
@@ -182,7 +193,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
 });
 
 //Get List of Books
-app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
+app.get('/books', passport.authenticate('jwt', {session: false}), (req, res) => {
     Books.find().then((book) => {
         res.status(201).json(book);
     }).catch((err) => {
@@ -192,7 +203,7 @@ app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res)
 });
 
 //Get Info on a Book
-app.get('/books/:Title', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
+app.get('/books/:Title', passport.authenticate('jwt', {session: false}), (req, res) => {
     Books.findOne({ Title: req.params.Title }).then((book) => {
         res.json(book);
     }).catch((err) => {
@@ -202,7 +213,7 @@ app.get('/books/:Title', /*passport.authenticate('jwt', {session: false}),*/ (re
 });
 
 //Get Author
-app.get('/author/:Name', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
+app.get('/author/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
     Books.find({ 'Author.Name': req.params.Name }).then((book) => {
         res.json(book);
     }).catch((err) => {
