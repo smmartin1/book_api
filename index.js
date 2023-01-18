@@ -213,7 +213,7 @@ app.get('/books/:Title', passport.authenticate('jwt', {session: false}), (req, r
 });
 
 //Get Author
-app.get('/author/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/authors/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
     Books.find({ 'Author.Name': req.params.Name }).then((book) => {
         res.json(book);
     }).catch((err) => {
