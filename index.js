@@ -113,7 +113,7 @@ app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req
         console.error(err);
         res.status.apply(500).send('Error: ' + err);
     });
-})
+});
 
 //Update User
 app.put('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
