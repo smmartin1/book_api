@@ -172,7 +172,7 @@ app.delete('/users/:Username/books/:bookID', passport.authenticate('jwt', {sessi
 app.get('/users/:Username/books', passport.authenticate('jwt', {session: false}), (req, res) => {
     Users.findOne({ Username: req.params.Username}).then((user) => {
         if (user) {
-            req.status(200).json(user.FavoriteBooks);
+            res.status(200).json(user.FavoriteBooks);
         } else {
             res.status(400).send('Could not find favorite movies or user does not have any');
         }
