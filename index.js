@@ -116,24 +116,39 @@ app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req
 });
 
 //Update User
-app.put('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, { $set: 
-        {
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
+app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
+    [
+        check('Username', 'Username is required').isLength({min: 5}),
+        check('Username', 'Username cannot contain special characters.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
         }
-    },
-    { new: true },
-    (err, updatedUser) => {
-        if(err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
-    });
+
+        let hashedPassword = Users.hashPassword(req.body.Password);
+            Users.findOneAndUpdate(
+                { Username: req.params.Username },
+                { $set:
+                    {
+                    Username: req.body.Username,
+                    Password: hashedPassword,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                    }
+                },
+                { new: true },
+                (err, updatedUser) => {
+                    if(err) {
+                    console.error(err);
+                    res.status(500).send('Error: ' + err);
+                    } else {
+                    res.json(updatedUser);
+                    }
+            });
 });
 
 //Add Books to Favorites
