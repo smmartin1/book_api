@@ -33,6 +33,7 @@ let allowedOrigins = [
     'https://mighty-falls-90534.herokuapp.com',
     'http://localhost:8080',
     'http://localhost:1234',
+    'http://localhost:3000',
     'https://smmartin1.github.io'
 ];
 
