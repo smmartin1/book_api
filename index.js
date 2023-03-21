@@ -210,7 +210,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (
 });
 
 //Get List of Books
-app.get('/books', /*passport.authenticate('jwt', {session: false}),*/ (req, res) => {
+app.get('/books', passport.authenticate('jwt', {session: false}), (req, res) => {
     Books.find().then((book) => {
         res.status(201).json(book);
     }).catch((err) => {
