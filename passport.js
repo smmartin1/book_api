@@ -21,7 +21,7 @@ passport.use(new LocalStrategy({
     }
       
     if (!user) {
-      console.log('incorrect username');
+      console.log('Incorrect username');
       return callback(null, false, {message: 'Incorrect username'});
     }
 
