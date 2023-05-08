@@ -1,34 +1,35 @@
-//JavaScript Document
-
-const express = require('express'),
-	bodyParser = require('body-parser'),
- 	uuid = require('uuid'),
-	morgan = require('morgan');
-
+const express = require('express');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
-const passport = require('passport');
-require('./passport');
+const { check, validationResult } = require('express-validator')
 
 const Books = Models.Book;
 const Users = Models.User;
 
+const app = express();
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a'});
+
+//Connect to MongoDB
 mongoose.connect(process.env.CONNECTION_URI || 'mongodb://localhost:27017/myBooksDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-const cors = require('cors');
-
-const { check, validationResult } = require('express-validator');
-
-const app = express();
-
-const port = process.env.PORT || 8080;
-
+app.use(morgan('combined', {stream: accessLogStream}));
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(morgan('common'));
+const cors = require('cors');
+app.use(cors());
 
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+
+/*
 let allowedOrigins = [
     'https://mighty-falls-90534.herokuapp.com',
     'http://localhost:8080',
@@ -48,8 +49,8 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+*/
 
-let auth = require('./auth')(app);
 
 app.get('/', (req, res) => {
     res.send('Sit down and read a good book!');
@@ -239,9 +240,6 @@ app.get('/authors/:Name', passport.authenticate('jwt', {session: false}), (req, 
     });
 })
 
-//Express
-app.use(express.static('public'));
-
 //Error Handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -249,6 +247,7 @@ app.use((err, req, res, next) => {
 });
 
 //Port Number
+const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on Port ' + port);
 });
